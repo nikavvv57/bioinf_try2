@@ -30,13 +30,13 @@ def filter_qual(qual, quality_threshold):
 
 def filter_fastq(seqs, gc_bounds=(0, 100), length_bounds=(0, 2**32), quality_threshold=0):
     """
-    Takes fastq sequences, where is the key - string, sequence name and the value is a tuple of two strings:
+    Takes fastq sequences(dict), where is the key - sequence name(str) and the value is a tuple of two strings:
     sequence and quality. Returns the dictionary, consisting only of those sequences that passed all the conditions.
     :param seqs: dict
-    :param gc_bounds: int or tuple. If it's an int, then the function then the function discards reads
-    with a GC composition lower than this value.
-    :param length_bounds: int or tuple. If it's an int, then the function then the function discards reads
-    with a length lower than this value.
+    :param gc_bounds: int,float or tuple. If it's an int or float, then the function then the function discards reads
+    with a GC composition lower than this value.If it's a tuple, then function will filter sequences in this range. 
+    :param length_bounds: int,float or tuple. If it's an int or float, then the function then the function discards reads
+    with a length lower than this value.If it's a tuple, then function will filter sequences in this range. 
     :param quality_threshold: int. All reads with quality below the value will be discarded.
     :return: dict.
     """
