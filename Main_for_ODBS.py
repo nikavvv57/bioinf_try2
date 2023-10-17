@@ -1,12 +1,13 @@
-from Nika_modules import FASTQ_tools, dna_rna_tools, amino_acids_tools
+from Nika_modules import FASTQ_tools, dna_rna_tools, amino_acids_tools, read_fastq_file, write_output
 from Nika_modules.amino_acids_tools import single_letter_alphabet, three_letter_alphabet
 
 
-def filter_fastq(seqs, gc_bounds=(0, 100), length_bounds=(0, 2**32), quality_threshold=0):
+def filter_fastq(input_path, gc_bounds=(0, 100), length_bounds=(0, 2**32), quality_threshold=0, output_filename=None):
     """
     Takes fastq sequences(dict), where is the key - sequence name(str), and the value is a tuple of two strings:
     sequence and quality. Returns the dictionary, consisting only of those sequences that passed all the conditions.
-    :param seqs: dict
+    :param input_path: str. Path to fastq file.
+    :param output_filename: str. Name of output file.
     :param gc_bounds: int, float or tuple. If it's an int or float, then the function discards reads
     with a GC composition lower than this value.
     :param length_bounds: int, float or tuple. If it's an int or float, then the function discards reads
@@ -15,11 +16,12 @@ def filter_fastq(seqs, gc_bounds=(0, 100), length_bounds=(0, 2**32), quality_thr
     :return: dict.
     """
     filtered_seqs = {}
-    for name, (seq, qual) in seqs.items():
+    fastq_file = read_fastq_file.read_fastq(input_path)
+    for name, (seq, comment, qual) in fastq_file.items():
         if FASTQ_tools.filter_gc(seq, gc_bounds) and FASTQ_tools.filter_len(seq, length_bounds) \
                 and FASTQ_tools.filter_qual(qual, quality_threshold):
-            filtered_seqs[name] = seq
-    return filtered_seqs
+            filtered_seqs[name] = (seq, comment, qual)
+    write_output.save_filtered_fastq(filtered_seqs, input_path, output_filename)
 
 
 def run_dna_rna_tools(*sequences):

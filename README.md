@@ -26,27 +26,25 @@ run_aminoacid_seq('LLYdD', function = 'determine_charge', record_type = 1, perce
 ``` 
 
 ### FASTQ 
-The function **‘filter_fastq’** takes fastq sequences(**seqs**, *dict*), where the key is - sequence name(*str*) and the value is a tuple of two strings: sequence(*str*) and quality(*str*). **‘filter_fastq’** filters reads according to different parameters and returns the dictionary, consisting only of those sequences that passed all the conditions. You need to specify named arguments: gc_bounds, length_bounds, quality_threshold.
+The function **‘filter_fastq’** takes fastq file(**input_path**, *str*). **‘filter_fastq’** filters reads according to different parameters and returns the dictionary, consisting only of those sequences that passed all the conditions. You need to specify named arguments: gc_bounds, length_bounds, quality_threshold, output_filename.
 - **gc_bounds**: *int, float or tuple*. If it's an int or float, then the function then the function discards reads with a GC composition lower than this value. If it's a tuple, then function will filter sequences in this range. 
 - **length_bounds**: *int, float or tuple*. If it's an int or float, then the function discards reads with a length lower than this value. If it's a tuple, then function will filter sequences in this range. 
 - **quality_threshold**: *int*. All reads with quality below the value will be discarded.
-- **return**: *dict*. Consists of filtered sequences.
+- **output_filename**: *str*. By default, the value is None. If there is no *output_filename* parameter function saves new fastq file with the name of non_filtered fastq file. And adds .fastq to the end of file name, if there isn't. Function creates a folder with the name - fastq_filtrator_results, if there isn't such directory in your laptop.
+- **return**: file. Consists of filtered sequences.
 
 #### Example:
 ```
-# dict of fastq files
-seqs = {
-    "Seq1": ("ATKLATGAT", "BBBBBBBB@"), 
-    "Seq2": ("GCTAGCTAGCTA", "DDDDDDDDDDDD"),
-    "Seq3": ("ATCGATCGATCG", "BBBBBBBBBBBB"),
-}
+if __name__ == "__main__":
+    input_path = "/Users/Nika/..."
+    filter_fastqfilter_fastq(input_path, gc_bounds=(30, 70), length_bounds=(10, 15), quality_threshold=20)
 ```
 #### Example:
 ```
-filter_fastq(seqs, gc_bounds=(30, 70), length_bounds=(10, 15), quality_threshold=20)
+filter_fastq(input_path, gc_bounds=(30, 70), length_bounds=(10, 15), quality_threshold=20, output_filename='filtered_reads.fastq')
 ```          
 ```
-filter_fastq(seqs, gc_bounds=44.4, length_bounds=44.4, quality_threshold=20)
+filter_fastq(input_path, gc_bounds=44.4, length_bounds=44.4, quality_threshold=20,output_filename='filtered_reads')
 ```    
 ### RNA or DNA tools
 The **‘run_dna_rna_tools’** function takes as input an arbitrary number of arguments with DNA or/and RNA sequences (*str*), as well as the name of the **procedure** to be executed (which is the last argument, *str*). If one sequence is given as input, a string with the result is returned. If several sequences are supplied, a list of strings is returned. Output saves register. 
